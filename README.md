@@ -1,4 +1,4 @@
-<b>Cryptocurrency Portfolio Tracker in Python</b>
+<h1>Cryptocurrency Portfolio Tracker in Python</h1>
 
 Disclaimer!
 <br>This is not financial advice and shouldn't be taken as such. I am not a professional adviser and this is solely for educational purposes or for those who already invest in the highly volatile cryptocurrencies at their own risk, and wish to utilise to keep track of their trades. In addition, the trades in the Trade_history.csv file are not real and were generated purely for the educational purpose of this code. For those interested in using this, be aware of the limitations highlighted at the end.

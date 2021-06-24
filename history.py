@@ -2,8 +2,6 @@
 
 import crypto_portfolio_kit as ck
 import pandas as pd
-import matplotlib.pyplot as plt
-from datetime import datetime
 
 trades = pd.read_csv('trade-history.csv', header=0, index_col=0, na_values=-99.99)
 

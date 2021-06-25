@@ -13,11 +13,14 @@
 ## Requirements
 
 - python 3
+- pandas
+- numpy
 
 ## Running 
 
 ```console
 $ python ./tracker.py
+$ python ./history.py
 ```
 
 ## Motivation

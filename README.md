@@ -49,4 +49,5 @@ highlight that this is not financial advice and that the trades in the
 [`trade-history.csv`](trade-history.csv) file were purely examples.
 I myself used this code to keep track of my investments across two
 accounts and it turned out to be very accurate and in line with the values
-displayed in the two exchanges.
+displayed in the two exchanges. Therefore, for personal use, one only has 
+to match the trade history file with their trades. 

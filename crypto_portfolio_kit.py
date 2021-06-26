@@ -103,7 +103,7 @@ def portfolio(th, account='', exchange='', timeframe='day'):
     holdings = holdings.set_index(tl)
     holdings.columns = n
     for i in n:
-        holdings[i] = list(map(lambda x: crypto_amount(th, i, x, account=account), holdings.index.strftime("%Y-%m-%d")))
+        holdings[i] = list(map(lambda x: crypto_amount(th, i, x), holdings.index.strftime("%Y-%m-%d")))
     if 'USDT' in holdings.columns:
         USDT = holdings['USDT']
         del holdings['USDT']

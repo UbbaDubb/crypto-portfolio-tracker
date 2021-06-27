@@ -8,7 +8,7 @@ from datetime import datetime
 def crypto_amount(df, from_sym='', end_date='', start_date='', account=''):
     start_date=df.index.min()
     if end_date:
-        df.loc[start_date:end_date]
+        df=df.loc[start_date:end_date]
     deps = df.loc[df['To'] == from_sym]
     wdrwls = df.loc[df['From'] == from_sym]
     if account:

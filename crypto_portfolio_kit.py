@@ -76,7 +76,12 @@ def get_hist_close(from_sym='BTC', to_sym='USDT', timeframe='day', limit=2000, a
     # response comes as json
     response = requests.get(baseurl, params=parameters)
 
-    data = response.json()['Data']['Data']
+    json = response.json()
+
+    if json['Response'] == 'Error':
+        return get_hist_close(from_sym, to_sym, timeframe, limit, aggregation)
+
+    data = json['Data']['Data']
 
     # data from json is in array of dictionaries
     df = pd.DataFrame.from_dict(data)
@@ -91,41 +96,43 @@ def get_hist_close(from_sym='BTC', to_sym='USDT', timeframe='day', limit=2000, a
 
 # Using most of the previous functions, it calculates a historical porotfolio for a desired account and exchange in USDT.
 def portfolio(th, account='', exchange='', timeframe='day'):
-    n = sorted(set(th['To'].to_list()))
+    global USDT
+    assets = sorted(set(th['To'].to_list()))
     start_dt = th.index.min()
     end_dt = datetime.today().strftime('%Y-%m-%d')
+
     if account:
         th = th.loc[th['Account'] == account]
-    tl = pd.date_range(start_dt, end_dt) #Defines the date range
+    tl = pd.date_range(start_dt, end_dt).strftime("%Y-%m-%d") #Defines the date range
 
     #Creates a dataframe of the different amounts held over the date range
-    holdings = pd.DataFrame(np.zeros((len(tl), len(n))))
+    holdings = pd.DataFrame(np.zeros((len(tl), len(assets))))
     holdings = holdings.set_index(tl)
-    holdings.columns = n
-    for i in n:
-        holdings[i] = list(map(lambda x: crypto_amount(th, i, x), holdings.index.strftime("%Y-%m-%d")))
+    holdings.columns = assets
+    for asset in assets:
+        #holdings[asset] = list(map(lambda x: crypto_amount(th, asset, x), holdings.index.strftime("%Y-%m-%d")))
+
+        for date in holdings.index:
+            holdings[asset][date] =crypto_amount(df=th, from_sym=asset, end_date=date, start_date=start_dt)
     if 'USDT' in holdings.columns:
         USDT = holdings['USDT']
         del holdings['USDT']
-    m = sorted(set(th['To'].to_list()))
-    if 'USDT' in m:
-        m.remove('USDT')
+    assets = sorted(set(th['To'].to_list()))
+    if 'USDT' in assets:
+        assets.remove('USDT')
     holdings.fillna(0)
 
     #Creates a dataframe for the historical prices of the assets
-    prices_hist = pd.DataFrame(np.zeros((len(tl), len(m))))
+    prices_hist = pd.DataFrame(np.zeros((len(tl), len(assets))))
     prices_hist = prices_hist.set_index(tl)
-    prices_hist.columns = m
+    prices_hist.columns = assets
     if exchange:
-        for i in m:
-            prices_hist[i] = list(get_hist_close(i, limit=(len(tl) - 1), exchange=exchange, timeframe=timeframe)['close'])
-    else:
-        for i in m:
-            prices_hist[i] = list(get_hist_close(i, limit=(len(tl) - 1), timeframe=timeframe)['close'])
+        for asset in assets:
+            prices_hist[asset] = (get_hist_close(asset, limit=(len(tl) - 1), exchange=exchange, timeframe=timeframe)['close']).to_numpy()
 
     #Creates a final dataframe, which is the product of the two previous ones.
     portfolio_hist = prices_hist * holdings
-    if 'USDT' in n:
+    if 'USDT' in assets:
         portfolio_hist['USDT'] = USDT
     invested = portfolio_hist['GBP']
     del portfolio_hist['GBP']

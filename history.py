@@ -7,13 +7,10 @@ trades = pd.read_csv('trade-history.csv', header=0, index_col=0, na_values=-99.9
 
 # %%time
 accounts = sorted(set(trades['Account'].to_list()))
+
 d = {}
 for name in accounts:
-    try:
         d[name] = ck.portfolio(trades, account=name, exchange=name)
-    except:
-        d[name] = ck.portfolio(trades, account=name)
-
 
 for name in accounts:
     d[name] = d[name].fillna(0)

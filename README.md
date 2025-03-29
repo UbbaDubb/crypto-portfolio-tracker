@@ -15,6 +15,7 @@
 - python 3
 - pandas
 - numpy
+- requests
 
 ## Running 
 

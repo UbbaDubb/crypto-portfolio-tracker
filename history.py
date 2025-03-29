@@ -1,11 +1,10 @@
-#!/usr/bin/python
 
 import crypto_portfolio_kit as ck
 import pandas as pd
 
 trades = pd.read_csv('trade-history.csv', header=0, index_col=0, na_values=-99.99)
 
-# %%time
+
 accounts = sorted(set(trades['Account'].to_list()))
 
 d = {}
